@@ -1,16 +1,23 @@
-.content {
+.footer {
   margin: 0 auto;
   width: 68.75%;
+  padding-top: 67px;
+  padding-bottom: 60px;
+}
+
+.footer__copyright {
+  font-size: 18px;
+  line-height: 1.2;
+  color: #545454;
 }
 
 @media screen and (max-width: 600px) {
-  .content {
+  .footer {
     width: 88.125%;
   }
 }
-
 @media screen and (min-width: 601px) and (max-width: 1080px) {
-  .content {
+  .footer {
     width: 80%;
   }
 }
