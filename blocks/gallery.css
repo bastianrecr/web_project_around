@@ -1,0 +1,50 @@
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.92%;
+  width: 100%;
+}
+
+.gallery__post {
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.gallery__post-image {
+  width: 100%;
+  height: 78.1%;
+}
+
+.gallery__post-description {
+  padding: 25px 15px 25px 21px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gallery__post-title {
+  margin: 0;
+  color: #000;
+  font-weight: 900;
+  font-size: 24px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.gallery__post-like-button {
+  border: none;
+  background: url("../images/gallery/like_button.svg") center no-repeat;
+  background-size: 100%;
+  width: 21px;
+  height: 19px;
+}
+
+@media screen and (max-width: 600px) {
+  .gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
