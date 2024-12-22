@@ -74,7 +74,7 @@
   cursor: pointer;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 719px) {
   .profile {
     padding-top: 42px;
     padding-bottom: 36px;
@@ -115,7 +115,14 @@
   }
 }
 
-@media screen and (min-width: 601px) and (max-width: 1080px) {
+@media screen and (min-width: 720px) and (max-width: 880px) {
+  .profile__add-button {
+    width: 75px;
+    height: 25px;
+  }
+}
+
+@media screen and (min-width: 720px) and (max-width: 1080px) {
   .profile__name {
     font-size: 24px;
   }
