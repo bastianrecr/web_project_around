@@ -41,6 +41,15 @@
   height: 19px;
 }
 
+.gallery__post-like-button:hover {
+  opacity: 50%;
+  cursor: pointer;
+}
+
+.gallery__post-like-button_active {
+  background: url("../images/gallery/like_button_active.svg") center no-repeat;
+}
+
 @media screen and (max-width: 600px) {
   .gallery {
     display: flex;
