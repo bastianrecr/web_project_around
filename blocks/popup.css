@@ -12,6 +12,10 @@
   display: none;
 }
 
+.popup__overlay_show {
+  display: block;
+}
+
 .popup__content {
   position: fixed;
   top: 50%;
@@ -24,6 +28,10 @@
   width: 33.6%;
   max-width: 430px;
   display: none;
+}
+
+.popup__content_show {
+  display: block;
 }
 
 .popup__close-button {
