@@ -94,6 +94,35 @@
   cursor: pointer;
 }
 
+.popup_image-view .popup__overlay {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.popup__content_image-view {
+  background: none;
+  padding: 0;
+  width: auto;
+  max-width: 75vw;
+  max-height: 75vh;
+}
+
+.popup__content_image-view_active {
+  display: block;
+}
+
+.popup__image {
+  max-width: 100%;
+  max-height: 75vh;
+  margin-bottom: 20px;
+  border-radius: 0;
+}
+
+.popup__image-title {
+  font-size: 12px;
+  color: #fff;
+  margin: 0;
+}
+
 @media screen and (max-width: 600px) {
   .popup__content {
     padding: 0;

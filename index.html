@@ -49,74 +49,7 @@
           </div>
           <button class="profile__add-button"></button>
         </section>
-        <section class="gallery">
-          <div class="gallery__post">
-            <img
-              src="./images/gallery/yosemite.jpg"
-              alt="Valle de Yosemite"
-              class="gallery__post-image"
-            />
-            <div class="gallery__post-description">
-              <p class="gallery__post-title">Valle de Yosemite</p>
-              <button class="gallery__post-like-button"></button>
-            </div>
-          </div>
-          <div class="gallery__post">
-            <img
-              src="./images/gallery/lake_louise.png"
-              alt="Lago Louise"
-              class="gallery__post-image"
-            />
-            <div class="gallery__post-description">
-              <p class="gallery__post-title">Lago Louise</p>
-              <button class="gallery__post-like-button"></button>
-            </div>
-          </div>
-          <div class="gallery__post">
-            <img
-              src="./images/gallery/mountains.png"
-              alt="Montañas Calvas"
-              class="gallery__post-image"
-            />
-            <div class="gallery__post-description">
-              <p class="gallery__post-title">Montañas Calvas</p>
-              <button class="gallery__post-like-button"></button>
-            </div>
-          </div>
-          <div class="gallery__post">
-            <img
-              src="./images/gallery/latemar.png"
-              alt="Latemar"
-              class="gallery__post-image"
-            />
-            <div class="gallery__post-description">
-              <p class="gallery__post-title">Latemar</p>
-              <button class="gallery__post-like-button"></button>
-            </div>
-          </div>
-          <div class="gallery__post">
-            <img
-              src="./images/gallery/vanoise.png"
-              alt="Vanois National Park"
-              class="gallery__post-image"
-            />
-            <div class="gallery__post-description">
-              <p class="gallery__post-title">Vanois National Park</p>
-              <button class="gallery__post-like-button"></button>
-            </div>
-          </div>
-          <div class="gallery__post">
-            <img
-              src="./images/gallery/lake_di_braies.png"
-              alt="Lago di Baies"
-              class="gallery__post-image"
-            />
-            <div class="gallery__post-description">
-              <p class="gallery__post-title">Lago di Baies</p>
-              <button class="gallery__post-like-button"></button>
-            </div>
-          </div>
-        </section>
+        <section class="gallery"></section>
       </main>
       <footer class="footer">
         <p class="footer__copyright">&copy; 2024 Around the U.S.</p>
@@ -146,6 +79,50 @@
         </form>
       </div>
     </div>
+    <div class="popup popup_add-card">
+      <div class="popup__overlay"></div>
+      <div class="popup__content">
+        <button class="popup__close-button"></button>
+        <h2 class="popup__title">Nuevo Lugar</h2>
+        <form class="popup__form popup__form_add-card">
+          <fieldset class="popup__form-input-fields">
+            <input
+              type="text"
+              id="card-title"
+              class="popup__input"
+              placeholder="Título"
+              required
+            />
+            <input
+              type="url"
+              id="card-link"
+              class="popup__input"
+              placeholder="Enlace a la imagen"
+              required
+            />
+          </fieldset>
+          <button type="submit" class="popup__submit-button">Crear</button>
+        </form>
+      </div>
+    </div>
+    <div class="popup popup_image-view">
+      <div class="popup__overlay"></div>
+      <div class="popup__content popup__content_image-view">
+        <button class="popup__close-button"></button>
+        <img src="" alt="" class="popup__image" />
+        <p class="popup__image-title"></p>
+      </div>
+    </div>
+    <template id="gallery-card-template">
+      <div class="gallery__post">
+        <img src="" alt="" class="gallery__post-image" />
+        <div class="gallery__post-description">
+          <p class="gallery__post-title"></p>
+          <button class="gallery__post-like-button"></button>
+          <button class="gallery__post-trash-button"></button>
+        </div>
+      </div>
+    </template>
     <script src="./scripts/index.js"></script>
   </body>
 </html>

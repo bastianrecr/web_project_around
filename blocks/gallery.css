@@ -6,9 +6,11 @@
 }
 
 .gallery__post {
+  position: relative;
   background-color: #fff;
   border-radius: 10px;
   overflow: hidden;
+  height: 361px;
 }
 
 .gallery__post-image {
@@ -48,6 +50,25 @@
 
 .gallery__post-like-button_active {
   background: url("../images/gallery/like_button_active.svg") center no-repeat;
+  background-size: 100%;
+}
+
+.gallery__post-trash-button {
+  border: none;
+  background: url("../images/gallery/trash_icon.svg") center no-repeat;
+  background-size: 100%;
+  width: 18px;
+  height: 19.3px;
+  cursor: pointer;
+
+  /* Posicionar en la parte superior derecha */
+  position: absolute;
+  top: 18px;
+  right: 15px;
+}
+
+.gallery__post-trash-button:hover {
+  opacity: 70%;
 }
 
 @media screen and (max-width: 600px) {
