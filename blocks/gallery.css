@@ -18,6 +18,10 @@
   height: 78.1%;
 }
 
+.gallery__post-image:hover {
+  cursor: pointer;
+}
+
 .gallery__post-description {
   padding: 25px 15px 25px 21px;
   display: flex;
