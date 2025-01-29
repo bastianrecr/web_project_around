@@ -62,18 +62,23 @@
         <h2 class="popup__title">Editar perfil</h2>
         <form class="popup__form">
           <fieldset class="popup__form-input-fields">
-            <input
-              type="text"
-              id="name"
-              class="popup__input"
-              placeholder="Nombre"
-            />
-            <input
-              type="text"
-              id="about"
-              class="popup__input"
-              placeholder="Acerca de mí"
-            />
+            <label class="popup__input-field">
+              <input
+                type="text"
+                id="name"
+                class="popup__input"
+                placeholder="Nombre"
+              /><span class="popup__input-error"></span>
+            </label>
+            <label class="popup__input-field">
+              <input
+                type="text"
+                id="about"
+                class="popup__input"
+                placeholder="Acerca de mí"
+              />
+              <span class="popup__input-error"></span>
+            </label>
           </fieldset>
           <button type="submit" class="popup__submit-button">Guardar</button>
         </form>
@@ -86,20 +91,26 @@
         <h2 class="popup__title">Nuevo Lugar</h2>
         <form class="popup__form popup__form_add-card">
           <fieldset class="popup__form-input-fields">
-            <input
-              type="text"
-              id="card-title"
-              class="popup__input"
-              placeholder="Título"
-              required
-            />
-            <input
-              type="url"
-              id="card-link"
-              class="popup__input"
-              placeholder="Enlace a la imagen"
-              required
-            />
+            <label class="popup__input-field">
+              <input
+                type="text"
+                id="card-title"
+                class="popup__input"
+                placeholder="Título"
+                required
+              />
+              <span class="popup__input-error"></span>
+            </label>
+            <label class="popup__input-field">
+              <input
+                type="url"
+                id="card-link"
+                class="popup__input"
+                placeholder="Enlace a la imagen"
+                required
+              />
+              <span class="popup__input-error"></span>
+            </label>
           </fieldset>
           <button type="submit" class="popup__submit-button">Crear</button>
         </form>

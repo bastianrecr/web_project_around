@@ -73,11 +73,20 @@
 }
 
 .popup__input {
+  width: 100%;
   font-size: 14px;
   line-height: 1.21;
   padding-bottom: 13px;
   border: none;
   border-bottom: 1px solid #c4c4c4;
+}
+
+.popup__input-error {
+  font-size: 12px;
+  line-height: 1.2;
+  position: absolute;
+  color: #ff0000;
+  padding-top: 7px;
 }
 
 .popup__submit-button {
