@@ -17,11 +17,20 @@ function openEditProfile() {
   popupOverlay.classList.add("popup__overlay_show");
   nameInput.value = profileName.textContent;
   aboutInput.value = profileAbout.textContent;
+
+  const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
+  const buttonElement = formElement.querySelector(".popup__submit-button");
+  toggleButtonState(inputList, buttonElement);
 }
 
 function closeEditProfile() {
   popup.classList.remove("popup__content_show");
   popupOverlay.classList.remove("popup__overlay_show");
+
+  const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
+  inputList.forEach((inputElement) =>
+    hideInputError(formElement, inputElement)
+  );
 }
 
 function handleProfileFormSubmit(evt) {
@@ -128,6 +137,16 @@ const addCardCloseButton = addCardPopup.querySelector(".popup__close-button");
 
 // Funciones para abrir y cerrar el popup
 function openAddCardPopup() {
+  const inputList = Array.from(addCardForm.querySelectorAll(".popup__input"));
+  const buttonElement = addCardForm.querySelector(".popup__submit-button");
+
+  addCardForm.reset();
+  inputList.forEach((inputElement) =>
+    hideInputError(addCardForm, inputElement)
+  );
+
+  toggleButtonState(inputList, buttonElement);
+
   addCardPopup
     .querySelector(".popup__content")
     .classList.add("popup__content_show");
@@ -143,6 +162,11 @@ function closeAddCardPopup() {
   addCardPopup
     .querySelector(".popup__overlay")
     .classList.remove("popup__overlay_show");
+
+  const inputList = Array.from(addCardForm.querySelectorAll(".popup__input"));
+  inputList.forEach((inputElement) =>
+    hideInputError(addCardForm, inputElement)
+  );
 }
 
 // Función para manejar el envío del formulario
@@ -225,11 +249,12 @@ const hasInvalidInput = (inputList) => {
 };
 
 const toggleButtonState = (inputList, buttonElement) => {
-  console.log(hasInvalidInput(inputList));
   if (hasInvalidInput(inputList)) {
     buttonElement.classList.add("popup__submit-button_inactive");
+    buttonElement.disabled = true;
   } else {
     buttonElement.classList.remove("popup__submit-button_inactive");
+    buttonElement.disabled = false;
   }
 };
 
