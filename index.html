@@ -68,7 +68,10 @@
                 id="name"
                 class="popup__input"
                 placeholder="Nombre"
-              /><span class="popup__input-error"></span>
+                required
+                minlength="2"
+                maxlength="40"
+              /><span class="popup__input-error popup__name-error"></span>
             </label>
             <label class="popup__input-field">
               <input
@@ -76,8 +79,11 @@
                 id="about"
                 class="popup__input"
                 placeholder="Acerca de mí"
+                required
+                minlength="2"
+                maxlength="200"
               />
-              <span class="popup__input-error"></span>
+              <span class="popup__input-error popup__about-error"></span>
             </label>
           </fieldset>
           <button type="submit" class="popup__submit-button">Guardar</button>
@@ -99,7 +105,7 @@
                 placeholder="Título"
                 required
               />
-              <span class="popup__input-error"></span>
+              <span class="popup__input-error popup__card-title-error"></span>
             </label>
             <label class="popup__input-field">
               <input
@@ -109,7 +115,7 @@
                 placeholder="Enlace a la imagen"
                 required
               />
-              <span class="popup__input-error"></span>
+              <span class="popup__input-error popup__card-link-error"></span>
             </label>
           </fieldset>
           <button type="submit" class="popup__submit-button">Crear</button>

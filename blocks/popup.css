@@ -87,12 +87,21 @@
   position: absolute;
   color: #ff0000;
   padding-top: 7px;
+  opacity: 0;
+}
+
+.popup__input-error_active {
+  opacity: 1;
+}
+
+.popup__input_type_error {
+  border-bottom-color: #ff0000;
 }
 
 .popup__submit-button {
   font-size: 18px;
   line-height: 1.21;
-  border: none;
+  border: 1px solid #000;
   color: #fff;
   background-color: #000;
   padding: 14px 25% 18.5px;
@@ -101,6 +110,12 @@
 .popup__submit-button:hover {
   opacity: 80%;
   cursor: pointer;
+}
+
+.popup__submit-button_inactive {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.2);
 }
 
 .popup_image-view .popup__overlay {
