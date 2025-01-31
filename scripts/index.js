@@ -1,5 +1,10 @@
-// Editar perfil
+import {
+  hideInputError,
+  toggleButtonState,
+  enableValidation,
+} from "./validation.js";
 
+// Editar perfil
 let editButton = document.querySelector(".profile__edit-button");
 let popup = document.querySelector(".popup__content");
 let popupOverlay = document.querySelector(".popup__overlay");
@@ -21,6 +26,8 @@ function openEditProfile() {
   const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
   const buttonElement = formElement.querySelector(".popup__submit-button");
   toggleButtonState(inputList, buttonElement);
+
+  document.addEventListener("keydown", closePopupOnEsc); // Agregar el evento de teclado
 }
 
 function closeEditProfile() {
@@ -31,7 +38,15 @@ function closeEditProfile() {
   inputList.forEach((inputElement) =>
     hideInputError(formElement, inputElement)
   );
+
+  document.removeEventListener("keydown", closePopupOnEsc); // Quitar el evento de teclado
 }
+
+popupOverlay.addEventListener("click", (evt) => {
+  if (evt.target === popupOverlay) {
+    closeEditProfile();
+  }
+});
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
@@ -46,7 +61,6 @@ editProfileCloseButton.addEventListener("click", closeEditProfile);
 formElement.addEventListener("submit", handleProfileFormSubmit);
 
 // Gallery cards
-
 const initialCards = [
   {
     name: "Valle de Yosemite",
@@ -74,47 +88,36 @@ const initialCards = [
   },
 ];
 
-// Seleccionar contenedor de galería y template
 const galleryContainer = document.querySelector(".gallery");
 const cardTemplate = document.querySelector("#gallery-card-template").content;
 
-// Función para crear una tarjeta
 function createCard(cardData) {
-  const cardElement = cardTemplate.cloneNode(true).firstElementChild; // Obtenemos el primer nodo DOM del template
+  const cardElement = cardTemplate.cloneNode(true).firstElementChild;
 
   const cardImage = cardElement.querySelector(".gallery__post-image");
   const cardTitle = cardElement.querySelector(".gallery__post-title");
   const likeButton = cardElement.querySelector(".gallery__post-like-button");
   const trashButton = cardElement.querySelector(".gallery__post-trash-button");
 
-  // Asignar datos
   cardImage.src = cardData.link;
   cardImage.alt = cardData.name;
   cardTitle.textContent = cardData.name;
 
-  // Evento "Me gusta"
   likeButton.addEventListener("click", () => {
     likeButton.classList.toggle("gallery__post-like-button_active");
   });
 
-  // Evento para eliminar tarjeta
   trashButton.addEventListener("click", () => {
-    cardElement.remove(); // Eliminar la tarjeta
+    cardElement.remove();
   });
 
-  // Evento para abrir el popup de imagen
   cardImage.addEventListener("click", () => {
-    popupImage.src = cardData.link;
-    popupImage.alt = cardData.name;
-    popupImageTitle.textContent = cardData.name;
-    imagePopupContent.classList.add("popup__content_show");
-    imagePopupOverlay.classList.add("popup__overlay_show");
+    openImagePopup(cardData.link, cardData.name, cardData.name);
   });
 
   return cardElement;
 }
 
-// Renderizar las tarjetas iniciales
 function renderInitialCards(cards) {
   cards.forEach((card) => {
     const cardElement = createCard(card);
@@ -122,12 +125,9 @@ function renderInitialCards(cards) {
   });
 }
 
-// Llamar a la función para inicializar las tarjetas
 renderInitialCards(initialCards);
 
-// Boton para Agregar lugar
-
-// Seleccionar elementos
+// Botón para Agregar lugar
 const addButton = document.querySelector(".profile__add-button");
 const addCardPopup = document.querySelector(".popup_add-card");
 const addCardForm = document.querySelector(".popup__form_add-card");
@@ -135,7 +135,6 @@ const cardTitleInput = document.querySelector("#card-title");
 const cardLinkInput = document.querySelector("#card-link");
 const addCardCloseButton = addCardPopup.querySelector(".popup__close-button");
 
-// Funciones para abrir y cerrar el popup
 function openAddCardPopup() {
   const inputList = Array.from(addCardForm.querySelectorAll(".popup__input"));
   const buttonElement = addCardForm.querySelector(".popup__submit-button");
@@ -144,7 +143,6 @@ function openAddCardPopup() {
   inputList.forEach((inputElement) =>
     hideInputError(addCardForm, inputElement)
   );
-
   toggleButtonState(inputList, buttonElement);
 
   addCardPopup
@@ -153,6 +151,8 @@ function openAddCardPopup() {
   addCardPopup
     .querySelector(".popup__overlay")
     .classList.add("popup__overlay_show");
+
+  document.addEventListener("keydown", closePopupOnEsc); // Agregar el evento de teclado
 }
 
 function closeAddCardPopup() {
@@ -163,13 +163,18 @@ function closeAddCardPopup() {
     .querySelector(".popup__overlay")
     .classList.remove("popup__overlay_show");
 
-  const inputList = Array.from(addCardForm.querySelectorAll(".popup__input"));
-  inputList.forEach((inputElement) =>
-    hideInputError(addCardForm, inputElement)
-  );
+  document.removeEventListener("keydown", closePopupOnEsc); // Quitar el evento de teclado
 }
 
-// Función para manejar el envío del formulario
+addCardPopup
+  .querySelector(".popup__overlay")
+  .addEventListener("click", (evt) => {
+    if (evt.target === addCardPopup.querySelector(".popup__overlay")) {
+      closeAddCardPopup();
+    }
+  });
+
+// Manejar envío de formulario para agregar una tarjeta
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
 
@@ -178,21 +183,18 @@ function handleAddCardFormSubmit(evt) {
     link: cardLinkInput.value,
   };
 
-  // Crear la tarjeta y agregarla al principio de la galería
   const cardElement = createCard(newCard);
-  galleryContainer.prepend(cardElement); // Se utiliza prepend para agregar al principio
+  galleryContainer.prepend(cardElement);
 
-  // Limpiar formulario y cerrar popup
   addCardForm.reset();
   closeAddCardPopup();
 }
 
-// Eventos para abrir, cerrar y guardar
 addButton.addEventListener("click", openAddCardPopup);
 addCardCloseButton.addEventListener("click", closeAddCardPopup);
 addCardForm.addEventListener("submit", handleAddCardFormSubmit);
 
-// Seleccionar elementos del popup de imagen
+// Popup de imagen
 const imagePopup = document.querySelector(".popup_image-view");
 const imagePopupContent = imagePopup.querySelector(
   ".popup__content_image-view"
@@ -202,82 +204,44 @@ const imagePopupCloseButton = imagePopup.querySelector(".popup__close-button");
 const popupImage = imagePopup.querySelector(".popup__image");
 const popupImageTitle = imagePopup.querySelector(".popup__image-title");
 
-// Función para cerrar el popup de imagen
+function openImagePopup(link, alt, title) {
+  popupImage.src = link;
+  popupImage.alt = alt;
+  popupImageTitle.textContent = title;
+
+  imagePopupContent.classList.add("popup__content_show");
+  imagePopupOverlay.classList.add("popup__overlay_show");
+
+  document.addEventListener("keydown", closePopupOnEsc); // Agregar el evento de teclado
+}
+
 function closeImagePopup() {
   imagePopupContent.classList.remove("popup__content_show");
   imagePopupOverlay.classList.remove("popup__overlay_show");
-  popupImage.src = "";
-  popupImage.alt = "";
-  popupImageTitle.textContent = "";
+
+  document.removeEventListener("keydown", closePopupOnEsc); // Quitar el evento de teclado
 }
 
-// Eventos para cerrar el popup de imagen
 imagePopupCloseButton.addEventListener("click", closeImagePopup);
-imagePopupOverlay.addEventListener("click", closeImagePopup);
-
-// Validación de formularios
-const showInputError = (formElement, inputElement, errorMessage) => {
-  const errorElement = formElement.querySelector(
-    `.popup__${inputElement.id}-error`
-  );
-  inputElement.classList.add("popup__input_type_error");
-  errorElement.textContent = errorMessage;
-  errorElement.classList.add("popup__input-error_active");
-};
-
-const hideInputError = (formElement, inputElement) => {
-  const errorElement = formElement.querySelector(
-    `.popup__${inputElement.id}-error`
-  );
-  inputElement.classList.remove("popup__input_type_error");
-  errorElement.classList.remove("popup__input-error_active");
-  errorElement.textContent = "";
-};
-
-const checkInputValidity = (formElement, inputElement) => {
-  if (!inputElement.validity.valid) {
-    showInputError(formElement, inputElement, inputElement.validationMessage);
-  } else {
-    hideInputError(formElement, inputElement);
+imagePopupOverlay.addEventListener("click", (evt) => {
+  if (evt.target === imagePopupOverlay) {
+    closeImagePopup();
   }
-};
+});
 
-const hasInvalidInput = (inputList) => {
-  return inputList.some((inputElement) => {
-    return !inputElement.validity.valid;
-  });
-};
-
-const toggleButtonState = (inputList, buttonElement) => {
-  if (hasInvalidInput(inputList)) {
-    buttonElement.classList.add("popup__submit-button_inactive");
-    buttonElement.disabled = true;
-  } else {
-    buttonElement.classList.remove("popup__submit-button_inactive");
-    buttonElement.disabled = false;
+// Función para cerrar popups con "Escape"
+function closePopupOnEsc(evt) {
+  if (evt.key === "Escape") {
+    if (popup.classList.contains("popup__content_show")) closeEditProfile();
+    if (
+      addCardPopup
+        .querySelector(".popup__content")
+        .classList.contains("popup__content_show")
+    )
+      closeAddCardPopup();
+    if (imagePopupContent.classList.contains("popup__content_show"))
+      closeImagePopup();
   }
-};
-
-const setEventListeners = (formElement) => {
-  const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
-  const buttonElement = formElement.querySelector(".popup__submit-button");
-  toggleButtonState(inputList, buttonElement);
-  inputList.forEach((inputElement) => {
-    inputElement.addEventListener("input", function () {
-      checkInputValidity(formElement, inputElement);
-      toggleButtonState(inputList, buttonElement);
-    });
-  });
-};
-
-const enableValidation = () => {
-  const formList = Array.from(document.querySelectorAll(".popup__form"));
-  formList.forEach((formElement) => {
-    formElement.addEventListener("submit", function (evt) {
-      evt.preventDefault();
-    });
-    setEventListeners(formElement);
-  });
-};
+}
 
 enableValidation();
