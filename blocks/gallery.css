@@ -84,6 +84,10 @@
 }
 
 @media screen and (min-width: 601px) and (max-width: 1080px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .gallery__post-description {
     padding-top: 10px;
   }

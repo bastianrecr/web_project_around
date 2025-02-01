@@ -5,17 +5,17 @@ import {
 } from "./validation.js";
 
 // Editar perfil
-let editButton = document.querySelector(".profile__edit-button");
-let popup = document.querySelector(".popup__content");
-let popupOverlay = document.querySelector(".popup__overlay");
-let editProfileCloseButton = document.querySelector(".popup__close-button");
+const editButton = document.querySelector(".profile__edit-button");
+const popup = document.querySelector(".popup__content");
+const popupOverlay = document.querySelector(".popup__overlay");
+const editProfileCloseButton = document.querySelector(".popup__close-button");
 
-let profileName = document.querySelector(".profile__name");
-let profileAbout = document.querySelector(".profile__about");
-let nameInput = document.querySelector("#name");
-let aboutInput = document.querySelector("#about");
+const profileName = document.querySelector(".profile__name");
+const profileAbout = document.querySelector(".profile__about");
+const nameInput = document.querySelector("#name");
+const aboutInput = document.querySelector("#about");
 
-let formElement = document.querySelector(".popup__form");
+const formElement = document.querySelector(".popup__form");
 
 function openEditProfile() {
   popup.classList.add("popup__content_show");
