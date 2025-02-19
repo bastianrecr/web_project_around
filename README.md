@@ -1,47 +1,112 @@
-# Tripleten web_project_around
+# Alrededor de los EE.UU.
 
-## **Descripción del Proyecto**
+## Descripción del Proyecto
 
-Este proyecto recrea el perfil de un usuario en una plataforma ficticia. Incluye funcionalidades interactivas que permiten al usuario:
+**Alrededor de los EE.UU.** es una aplicación web interactiva que simula el perfil de un usuario en una plataforma de exploración y fotografía. La aplicación permite al usuario:
 
-- Ver y explorar una galería de imágenes con títulos descriptivos.
-- Editar su perfil cambiando el nombre y la descripción del usuario a través de un formulario emergente (popup).
-- Dar "me gusta" a imágenes de la galería.
-- Subir imágenes personalizadas para expandir la galería.
+- **Editar su perfil:** Actualizar nombre y descripción mediante un formulario emergente.
+- **Explorar una galería de imágenes:** Visualizar lugares icónicos con títulos descriptivos.
+- **Interactuar con las tarjetas de la galería:**
+  - Dar "me gusta" (toggle en el botón de like).
+  - Eliminar tarjetas de la galería.
+- **Agregar nuevos lugares:** A través de un formulario emergente, el usuario puede añadir nuevas tarjetas con imagen y título.
+- **Visualizar imágenes en un popup:** Al hacer clic en una tarjeta, se abre una ventana modal que muestra la imagen en formato ampliado junto con su título.
 
-El diseño sigue principios de diseño responsivo para garantizar una experiencia de usuario óptima en dispositivos de diferentes tamaños.
+La aplicación está diseñada siguiendo principios de **diseño responsivo** para garantizar una experiencia óptima en dispositivos móviles y de escritorio.
 
-## **Tecnologías y Técnicas Utilizadas**
+---
 
-### **1. HTML**
+## Estructura de Archivos
 
-- Estructura semántica y limpia para garantizar la accesibilidad y facilidad de mantenimiento.
-- Uso de etiquetas específicas como `<section>`, `<header>`, `<main>`, `<footer>`, y `<fieldset>`.
+```bash
+.
+├── blocks
+│   ├── content.css
+│   ├── footer.css
+│   ├── gallery.css
+│   ├── header.css
+│   ├── page.css
+│   ├── popup.css
+│   └── profile.css
+├── images
+│   ├── gallery
+│   ├── popup
+│   └── profile
+├── pages
+│   └── index.css
+├── scripts
+│   ├── Card.js
+│   ├── FormValidator.js
+│   ├── index.js
+│   └── utils.js
+├── vendor
+│   ├── fonts
+│   └── normalize.css
+├── .editorconfig
+├── .gitignore
+├── .prettierignore
+├── index.html
+└── README.md
+```
 
-### **2. CSS**
+- **blocks/**: Contiene los archivos CSS principales, cada uno enfocado en un bloque específico de la interfaz (header, footer, popup, etc.).
+- **images/**: Almacena los recursos gráficos del proyecto (subcarpetas: `gallery/`, `popup/`, `profile/`).
+- **pages/index.css**: Archivo principal que importa todos los estilos de los bloques y normaliza el CSS.
+- **scripts/**:
+  - `Card.js`: Clase que modela cada tarjeta de la galería (like, borrar, abrir imagen).
+  - `FormValidator.js`: Clase para validar formularios y mostrar/ocultar mensajes de error.
+  - `index.js`: Punto de entrada que inicializa el proyecto, configura eventos y renderiza tarjetas iniciales.
+  - `utils.js`: Funciones utilitarias (por ejemplo, abrir/cerrar popup de imagen).
+- **vendor/**: Contiene archivos de terceros, como `fonts/` y `normalize.css`.
+- **index.html**: Documento HTML principal.
+- **.editorconfig**, **.gitignore**, **.prettierrc**: Configuraciones del proyecto y del repositorio.
+- **README.md**: Este archivo.
 
-- Diseño responsivo utilizando media queries para adaptarse a pantallas grandes y pequeñas.
-- Estilización personalizada para botones, formularios y galerías.
-- Uso de transiciones suaves para mejorar la experiencia de usuario.
-- Aplicación de técnicas avanzadas como `grid` y `flexbox` para el diseño de la galería y elementos del perfil.
+---
 
-### **3. JavaScript**
+## Funcionalidades Clave
 
-- Funcionalidad interactiva:
-  - Manejo de formularios para editar y actualizar la información del perfil.
-  - Manipulación del DOM para dar "me gusta" a imágenes.
-  - Lógica para abrir y cerrar popups con transiciones suaves.
-- Mejora de la experiencia del usuario utilizando eventos como `click` y `submit`.
+- **Edición de Perfil:**
+  - Abre un popup precargado con los datos actuales del usuario.
+  - Actualiza en tiempo real el nombre y la descripción del perfil.
+- **Galería de Imágenes:**
 
-### **4. Metodología BEM**
+  - Renderiza tarjetas basadas en datos iniciales y permite agregar nuevas.
+  - Cada tarjeta incluye: imagen, título, botón de "like" (con efecto de activación/desactivación) y botón para eliminar la tarjeta.
 
-- Organización del código CSS utilizando la metodología Block-Element-Modifier (BEM), lo que facilita el mantenimiento y la escalabilidad del proyecto.
-- Convenciones de nombres consistentes y claras.
+- **Validación de Formularios:**
 
-### **5. GitHub Pages**
+  - Implementación de validación en tiempo real con mensajes de error.
+  - Desactivación del botón de envío hasta que los datos sean válidos.
 
-- El proyecto está desplegado en GitHub Pages para fácil acceso y visualización.
+- **Popup para Visualización de Imágenes:**
+  - Abre un popup que muestra la imagen seleccionada en un formato ampliado, con cierre mediante clic en el overlay, botón o tecla Escape.
 
-## **Enlace al Proyecto**
+---
+
+## Tecnologías y Técnicas Utilizadas
+
+- **HTML5**
+  - Estructura semántica con etiquetas como `<header>`, `<main>`, `<section>`, `<footer>` y `<template>`.
+- **CSS3**
+  - Diseño responsivo mediante **media queries**.
+  - Uso de **Flexbox** y **CSS Grid** para la distribución de elementos.
+  - Metodología **BEM** para una organización clara y escalable del CSS.
+- **JavaScript (ES6 Modules)**
+  - Código modular para separar funcionalidades (tarjetas, validación, utilidades).
+  - Manipulación del DOM para popups, edición de perfil, gestión de la galería.
+  - Manejo de eventos (`click`, `submit`, `keydown`) para interacciones del usuario.
+
+---
+
+## Despliegue
+
+El proyecto se despliega en **GitHub Pages**, lo que permite un fácil acceso y visualización en línea.
 
 [Visita el proyecto en GitHub Pages](https://bastianrecr.github.io/web_project_around/)
+
+---
+
+## Autor
+
+Sebastian Regules
