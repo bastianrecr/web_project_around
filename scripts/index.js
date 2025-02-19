@@ -1,13 +1,21 @@
-import {
-  hideInputError,
-  toggleButtonState,
-  enableValidation,
-} from "./validation.js";
+import { Card } from "./Card.js";
+import { FormValidator } from "./FormValidator.js";
+import { openImagePopup } from "./utils.js";
 
-// Editar perfil
+// Configuración para la validación
+const validationConfig = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__submit-button",
+  inactiveButtonClass: "popup__submit-button_inactive",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__input-error_active",
+};
+
+// ----------- POPUP EDITAR PERFIL -----------
 const editButton = document.querySelector(".profile__edit-button");
-const popup = document.querySelector(".popup__content");
-const popupOverlay = document.querySelector(".popup__overlay");
+const popup = document.querySelector(".popup__content"); // contenido del popup de perfil
+const popupOverlay = document.querySelector(".popup__overlay"); // overlay del popup de perfil
 const editProfileCloseButton = document.querySelector(".popup__close-button");
 
 const profileName = document.querySelector(".profile__name");
@@ -15,52 +23,107 @@ const profileAbout = document.querySelector(".profile__about");
 const nameInput = document.querySelector("#name");
 const aboutInput = document.querySelector("#about");
 
-const formElement = document.querySelector(".popup__form");
+// Formulario de editar perfil
+const editProfileForm = document.querySelector(".popup__form");
 
+// Abre el popup de edición de perfil
 function openEditProfile() {
   popup.classList.add("popup__content_show");
   popupOverlay.classList.add("popup__overlay_show");
+
+  // Rellenar inputs con los datos actuales del perfil
   nameInput.value = profileName.textContent;
   aboutInput.value = profileAbout.textContent;
 
-  const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
-  const buttonElement = formElement.querySelector(".popup__submit-button");
-  toggleButtonState(inputList, buttonElement);
-
-  document.addEventListener("keydown", closePopupOnEsc); // Agregar el evento de teclado
+  document.addEventListener("keydown", closePopupOnEsc);
 }
 
+// Cierra el popup de edición de perfil
 function closeEditProfile() {
+  // Reinicia la validación antes de cerrarlo
+  editProfileValidator.resetValidation();
+
   popup.classList.remove("popup__content_show");
   popupOverlay.classList.remove("popup__overlay_show");
-
-  const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
-  inputList.forEach((inputElement) =>
-    hideInputError(formElement, inputElement)
-  );
-
-  document.removeEventListener("keydown", closePopupOnEsc); // Quitar el evento de teclado
+  document.removeEventListener("keydown", closePopupOnEsc);
 }
 
+// Listeners para abrir/cerrar popup de perfil
+editButton.addEventListener("click", openEditProfile);
+editProfileCloseButton.addEventListener("click", closeEditProfile);
 popupOverlay.addEventListener("click", (evt) => {
   if (evt.target === popupOverlay) {
     closeEditProfile();
   }
 });
 
+// Actualiza el perfil al enviar el formulario
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   profileName.textContent = nameInput.value;
   profileAbout.textContent = aboutInput.value;
-
   closeEditProfile();
 }
+editProfileForm.addEventListener("submit", handleProfileFormSubmit);
 
-editButton.addEventListener("click", openEditProfile);
-editProfileCloseButton.addEventListener("click", closeEditProfile);
-formElement.addEventListener("submit", handleProfileFormSubmit);
+// ----------- POPUP PARA AÑADIR LUGAR -----------
+const addButton = document.querySelector(".profile__add-button");
+const addCardPopup = document.querySelector(".popup_add-card");
+const addCardForm = document.querySelector(".popup__form_add-card");
+const cardTitleInput = document.querySelector("#card-title");
+const cardLinkInput = document.querySelector("#card-link");
+const addCardCloseButton = addCardPopup.querySelector(".popup__close-button");
+const addCardPopupContent = addCardPopup.querySelector(".popup__content");
+const addCardPopupOverlay = addCardPopup.querySelector(".popup__overlay");
 
-// Gallery cards
+// Abre el popup de añadir tarjeta
+function openAddCardPopup() {
+  // Limpiar los campos del formulario
+  addCardForm.reset();
+
+  addCardPopupContent.classList.add("popup__content_show");
+  addCardPopupOverlay.classList.add("popup__overlay_show");
+
+  document.addEventListener("keydown", closePopupOnEsc);
+}
+
+// Cierra el popup de añadir tarjeta
+function closeAddCardPopup() {
+  // Reinicia la validación antes de cerrarlo
+  addCardValidator.resetValidation();
+
+  addCardPopupContent.classList.remove("popup__content_show");
+  addCardPopupOverlay.classList.remove("popup__overlay_show");
+  document.removeEventListener("keydown", closePopupOnEsc);
+}
+
+// Listeners para abrir/cerrar popup de tarjeta
+addButton.addEventListener("click", openAddCardPopup);
+addCardCloseButton.addEventListener("click", closeAddCardPopup);
+addCardPopupOverlay.addEventListener("click", (evt) => {
+  if (evt.target === addCardPopupOverlay) {
+    closeAddCardPopup();
+  }
+});
+
+// Envía el formulario para crear una nueva tarjeta
+function handleAddCardFormSubmit(evt) {
+  evt.preventDefault();
+  const newCard = {
+    name: cardTitleInput.value,
+    link: cardLinkInput.value,
+  };
+
+  // Crea e inserta la nueva tarjeta en la galería
+  const cardElement = createCard(newCard);
+  galleryContainer.prepend(cardElement);
+
+  addCardForm.reset();
+  closeAddCardPopup();
+}
+addCardForm.addEventListener("submit", handleAddCardFormSubmit);
+
+// ----------- TARJETAS INICIALES -----------
 const initialCards = [
   {
     name: "Valle de Yosemite",
@@ -88,160 +151,48 @@ const initialCards = [
   },
 ];
 
+// Contenedor de la galería y selector de template
 const galleryContainer = document.querySelector(".gallery");
-const cardTemplate = document.querySelector("#gallery-card-template").content;
+const cardTemplateSelector = "#gallery-card-template";
 
+// Función para crear una tarjeta usando la clase Card
 function createCard(cardData) {
-  const cardElement = cardTemplate.cloneNode(true).firstElementChild;
-
-  const cardImage = cardElement.querySelector(".gallery__post-image");
-  const cardTitle = cardElement.querySelector(".gallery__post-title");
-  const likeButton = cardElement.querySelector(".gallery__post-like-button");
-  const trashButton = cardElement.querySelector(".gallery__post-trash-button");
-
-  cardImage.src = cardData.link;
-  cardImage.alt = cardData.name;
-  cardTitle.textContent = cardData.name;
-
-  likeButton.addEventListener("click", () => {
-    likeButton.classList.toggle("gallery__post-like-button_active");
-  });
-
-  trashButton.addEventListener("click", () => {
-    cardElement.remove();
-  });
-
-  cardImage.addEventListener("click", () => {
-    openImagePopup(cardData.link, cardData.name, cardData.name);
-  });
-
-  return cardElement;
+  // openImagePopup viene de utils.js
+  const card = new Card(cardData, cardTemplateSelector, openImagePopup);
+  return card.generateCard();
 }
 
+// Renderizar las tarjetas iniciales
 function renderInitialCards(cards) {
-  cards.forEach((card) => {
-    const cardElement = createCard(card);
+  cards.forEach((data) => {
+    const cardElement = createCard(data);
     galleryContainer.append(cardElement);
   });
 }
-
 renderInitialCards(initialCards);
 
-// Botón para Agregar lugar
-const addButton = document.querySelector(".profile__add-button");
-const addCardPopup = document.querySelector(".popup_add-card");
-const addCardForm = document.querySelector(".popup__form_add-card");
-const cardTitleInput = document.querySelector("#card-title");
-const cardLinkInput = document.querySelector("#card-link");
-const addCardCloseButton = addCardPopup.querySelector(".popup__close-button");
-
-function openAddCardPopup() {
-  const inputList = Array.from(addCardForm.querySelectorAll(".popup__input"));
-  const buttonElement = addCardForm.querySelector(".popup__submit-button");
-
-  addCardForm.reset();
-  inputList.forEach((inputElement) =>
-    hideInputError(addCardForm, inputElement)
-  );
-  toggleButtonState(inputList, buttonElement);
-
-  addCardPopup
-    .querySelector(".popup__content")
-    .classList.add("popup__content_show");
-  addCardPopup
-    .querySelector(".popup__overlay")
-    .classList.add("popup__overlay_show");
-
-  document.addEventListener("keydown", closePopupOnEsc); // Agregar el evento de teclado
-}
-
-function closeAddCardPopup() {
-  addCardPopup
-    .querySelector(".popup__content")
-    .classList.remove("popup__content_show");
-  addCardPopup
-    .querySelector(".popup__overlay")
-    .classList.remove("popup__overlay_show");
-
-  document.removeEventListener("keydown", closePopupOnEsc); // Quitar el evento de teclado
-}
-
-addCardPopup
-  .querySelector(".popup__overlay")
-  .addEventListener("click", (evt) => {
-    if (evt.target === addCardPopup.querySelector(".popup__overlay")) {
-      closeAddCardPopup();
-    }
-  });
-
-// Manejar envío de formulario para agregar una tarjeta
-function handleAddCardFormSubmit(evt) {
-  evt.preventDefault();
-
-  const newCard = {
-    name: cardTitleInput.value,
-    link: cardLinkInput.value,
-  };
-
-  const cardElement = createCard(newCard);
-  galleryContainer.prepend(cardElement);
-
-  addCardForm.reset();
-  closeAddCardPopup();
-}
-
-addButton.addEventListener("click", openAddCardPopup);
-addCardCloseButton.addEventListener("click", closeAddCardPopup);
-addCardForm.addEventListener("submit", handleAddCardFormSubmit);
-
-// Popup de imagen
-const imagePopup = document.querySelector(".popup_image-view");
-const imagePopupContent = imagePopup.querySelector(
-  ".popup__content_image-view"
-);
-const imagePopupOverlay = imagePopup.querySelector(".popup__overlay");
-const imagePopupCloseButton = imagePopup.querySelector(".popup__close-button");
-const popupImage = imagePopup.querySelector(".popup__image");
-const popupImageTitle = imagePopup.querySelector(".popup__image-title");
-
-function openImagePopup(link, alt, title) {
-  popupImage.src = link;
-  popupImage.alt = alt;
-  popupImageTitle.textContent = title;
-
-  imagePopupContent.classList.add("popup__content_show");
-  imagePopupOverlay.classList.add("popup__overlay_show");
-
-  document.addEventListener("keydown", closePopupOnEsc); // Agregar el evento de teclado
-}
-
-function closeImagePopup() {
-  imagePopupContent.classList.remove("popup__content_show");
-  imagePopupOverlay.classList.remove("popup__overlay_show");
-
-  document.removeEventListener("keydown", closePopupOnEsc); // Quitar el evento de teclado
-}
-
-imagePopupCloseButton.addEventListener("click", closeImagePopup);
-imagePopupOverlay.addEventListener("click", (evt) => {
-  if (evt.target === imagePopupOverlay) {
-    closeImagePopup();
-  }
-});
-
-// Función para cerrar popups con "Escape"
+// ----------- CERRAR POPUPS CON ESC -----------
 function closePopupOnEsc(evt) {
   if (evt.key === "Escape") {
-    if (popup.classList.contains("popup__content_show")) closeEditProfile();
-    if (
-      addCardPopup
-        .querySelector(".popup__content")
-        .classList.contains("popup__content_show")
-    )
+    // Popup de perfil
+    if (popup.classList.contains("popup__content_show")) {
+      closeEditProfile();
+    }
+    // Popup de nueva tarjeta
+    if (addCardPopupContent.classList.contains("popup__content_show")) {
       closeAddCardPopup();
-    if (imagePopupContent.classList.contains("popup__content_show"))
-      closeImagePopup();
+    }
+    // El popup de imagen se cierra con su propia lógica en utils.js
   }
 }
 
-enableValidation();
+// ----------- INSTANCIAR VALIDADORES -----------
+const editProfileValidator = new FormValidator(
+  validationConfig,
+  editProfileForm
+);
+const addCardValidator = new FormValidator(validationConfig, addCardForm);
+
+// Activar la validación en cada formulario
+editProfileValidator.enableValidation();
+addCardValidator.enableValidation();
