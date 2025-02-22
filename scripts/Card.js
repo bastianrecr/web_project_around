@@ -1,4 +1,3 @@
-// Card.js
 export class Card {
   constructor({ name, link }, templateSelector, handleCardClick) {
     this._name = name;

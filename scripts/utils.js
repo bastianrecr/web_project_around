@@ -1,8 +1,3 @@
-// utils.js
-
-// Aquí encapsulamos la lógica de abrir/cerrar la imagen en un popup.
-// Puedes añadir más funciones genéricas si lo deseas.
-
 // Referencias al popup de imagen
 const imagePopup = document.querySelector(".popup_image-view");
 const imagePopupContent = imagePopup.querySelector(
