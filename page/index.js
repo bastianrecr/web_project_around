@@ -1,6 +1,41 @@
 import { Card } from "../components/Card.js";
 import { FormValidator } from "../components/FormValidator.js";
 import { openImagePopup } from "../scripts/utils.js";
+import Section from "../components/Section.js";
+import Popup from "../components/Popup.js";
+
+// ----------- PRUEBA DE COMPONENTE "Section" -----------
+// Datos de prueba
+const dummyItems = ["Elemento 1", "Elemento 2", "Elemento 3"];
+
+// Función renderizadora de prueba: crea un párrafo para cada elemento
+function renderer(item) {
+  const p = document.createElement("p");
+  p.textContent = item;
+  // Agregar el elemento al contenedor utilizando el método addItem de la instancia de Section
+  sectionInstance.addItem(p);
+}
+
+const sectionInstance = new Section(
+  { items: dummyItems, renderer },
+  ".container"
+);
+
+sectionInstance.renderItems();
+
+// ----------- PRUEBA DE COMPONENTE "Popup" -----------
+
+const popupInstance = new Popup(".popup_testing");
+
+popupInstance.setEventListeners();
+
+popupInstance.open();
+
+setTimeout(() => {
+  popupInstance.close();
+}, 10000);
+
+// Fin de seccion de pruebas
 
 // Configuración para la validación
 const validationConfig = {
