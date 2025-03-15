@@ -1,50 +1,6 @@
-import { Card } from "../components/Card.js";
+import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
-import { openImagePopup } from "../scripts/utils.js";
-import Section from "../components/Section.js";
 import PopupWithImage from "../components/PopupWithImage.js";
-// import Popup from "../components/Popup.js";
-
-// ----------- PRUEBA DE COMPONENTE "Section" -----------
-// Datos de prueba
-const dummyItems = ["Elemento 1", "Elemento 2", "Elemento 3"];
-
-// Función renderizadora de prueba: crea un párrafo para cada elemento
-function renderer(item) {
-  const p = document.createElement("p");
-  p.textContent = item;
-  // Agregar el elemento al contenedor utilizando el método addItem de la instancia de Section
-  sectionInstance.addItem(p);
-}
-
-const sectionInstance = new Section(
-  { items: dummyItems, renderer },
-  ".container"
-);
-
-sectionInstance.renderItems();
-
-// ----------- PRUEBA DE COMPONENTE "Popup" -----------
-
-// const popupInstance = new Popup(".popup_testing");
-
-// popupInstance.setEventListeners();
-
-// popupInstance.open();
-
-// setTimeout(() => {
-//   popupInstance.close();
-// }, 10000);
-
-// ----------- PRUEBA DE COMPONENTE "PopupWithImage" ----------
-const popupWithImageInstance = new PopupWithImage(".popup_image-view");
-popupWithImageInstance.setEventListeners();
-
-popupWithImageInstance.open({
-  link: "https://images.unsplash.com/photo-1541336032412-2048a678540d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  name: "Descripción de la imagen",
-});
-// Fin de seccion de pruebas
 
 // Configuración para la validación
 const validationConfig = {
@@ -58,8 +14,8 @@ const validationConfig = {
 
 // ----------- POPUP EDITAR PERFIL -----------
 const editButton = document.querySelector(".profile__edit-button");
-const popup = document.querySelector(".popup__content"); // contenido del popup de perfil
-const popupOverlay = document.querySelector(".popup__overlay"); // overlay del popup de perfil
+const popup = document.querySelector(".popup__content");
+const popupOverlay = document.querySelector(".popup__overlay");
 const editProfileCloseButton = document.querySelector(".popup__close-button");
 
 const profileName = document.querySelector(".profile__name");
@@ -70,29 +26,21 @@ const aboutInput = document.querySelector("#about");
 // Formulario de editar perfil
 const editProfileForm = document.querySelector(".popup__form");
 
-// Abre el popup de edición de perfil
 function openEditProfile() {
   popup.classList.add("popup__content_show");
   popupOverlay.classList.add("popup__overlay_show");
-
-  // Rellenar inputs con los datos actuales del perfil
   nameInput.value = profileName.textContent;
   aboutInput.value = profileAbout.textContent;
-
   document.addEventListener("keydown", closePopupOnEsc);
 }
 
-// Cierra el popup de edición de perfil
 function closeEditProfile() {
-  // Reinicia la validación antes de cerrarlo
   editProfileValidator.resetValidation();
-
   popup.classList.remove("popup__content_show");
   popupOverlay.classList.remove("popup__overlay_show");
   document.removeEventListener("keydown", closePopupOnEsc);
 }
 
-// Listeners para abrir/cerrar popup de perfil
 editButton.addEventListener("click", openEditProfile);
 editProfileCloseButton.addEventListener("click", closeEditProfile);
 popupOverlay.addEventListener("click", (evt) => {
@@ -101,7 +49,6 @@ popupOverlay.addEventListener("click", (evt) => {
   }
 });
 
-// Actualiza el perfil al enviar el formulario
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   profileName.textContent = nameInput.value;
@@ -120,28 +67,20 @@ const addCardCloseButton = addCardPopup.querySelector(".popup__close-button");
 const addCardPopupContent = addCardPopup.querySelector(".popup__content");
 const addCardPopupOverlay = addCardPopup.querySelector(".popup__overlay");
 
-// Abre el popup de añadir tarjeta
 function openAddCardPopup() {
-  // Limpiar los campos del formulario
   addCardForm.reset();
-
   addCardPopupContent.classList.add("popup__content_show");
   addCardPopupOverlay.classList.add("popup__overlay_show");
-
   document.addEventListener("keydown", closePopupOnEsc);
 }
 
-// Cierra el popup de añadir tarjeta
 function closeAddCardPopup() {
-  // Reinicia la validación antes de cerrarlo
   addCardValidator.resetValidation();
-
   addCardPopupContent.classList.remove("popup__content_show");
   addCardPopupOverlay.classList.remove("popup__overlay_show");
   document.removeEventListener("keydown", closePopupOnEsc);
 }
 
-// Listeners para abrir/cerrar popup de tarjeta
 addButton.addEventListener("click", openAddCardPopup);
 addCardCloseButton.addEventListener("click", closeAddCardPopup);
 addCardPopupOverlay.addEventListener("click", (evt) => {
@@ -150,22 +89,25 @@ addCardPopupOverlay.addEventListener("click", (evt) => {
   }
 });
 
-// Envía el formulario para crear una nueva tarjeta
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
   const newCard = {
     name: cardTitleInput.value,
     link: cardLinkInput.value,
   };
-
-  // Crea e inserta la nueva tarjeta en la galería
   const cardElement = createCard(newCard);
   galleryContainer.prepend(cardElement);
-
   addCardForm.reset();
   closeAddCardPopup();
 }
 addCardForm.addEventListener("submit", handleAddCardFormSubmit);
+
+// ----------- INSTANCIA DEL POPUP DE IMAGEN -----------
+/*
+   Crear el popup con la clase PopupWithImage.*/
+const popupWithImage = new PopupWithImage(".popup_image-view");
+// Configuramos listeners (cerrar con overlay, botón close, etc.)
+popupWithImage.setEventListeners();
 
 // ----------- TARJETAS INICIALES -----------
 const initialCards = [
@@ -195,18 +137,22 @@ const initialCards = [
   },
 ];
 
-// Contenedor de la galería y selector de template
 const galleryContainer = document.querySelector(".gallery");
 const cardTemplateSelector = "#gallery-card-template";
 
-// Función para crear una tarjeta usando la clase Card
 function createCard(cardData) {
-  // openImagePopup viene de utils.js
-  const card = new Card(cardData, cardTemplateSelector, openImagePopup);
+  const card = new Card(
+    cardData,
+    cardTemplateSelector,
+    // Este callback se ejecutará cuando hagan click en la imagen:
+    ({ link, name }) => {
+      popupWithImage.open({ link, name });
+    }
+  );
   return card.generateCard();
 }
 
-// Renderizar las tarjetas iniciales
+// Renderizamos las tarjetas iniciales
 function renderInitialCards(cards) {
   cards.forEach((data) => {
     const cardElement = createCard(data);
@@ -218,15 +164,14 @@ renderInitialCards(initialCards);
 // ----------- CERRAR POPUPS CON ESC -----------
 function closePopupOnEsc(evt) {
   if (evt.key === "Escape") {
-    // Popup de perfil
     if (popup.classList.contains("popup__content_show")) {
       closeEditProfile();
     }
-    // Popup de nueva tarjeta
     if (addCardPopupContent.classList.contains("popup__content_show")) {
       closeAddCardPopup();
     }
-    // El popup de imagen se cierra con su propia lógica en utils.js
+    // El popup de imagen ahora se cierra con su propia lógica interna,
+    // manejada en la clase PopupWithImage.
   }
 }
 
@@ -237,6 +182,5 @@ const editProfileValidator = new FormValidator(
 );
 const addCardValidator = new FormValidator(validationConfig, addCardForm);
 
-// Activar la validación en cada formulario
 editProfileValidator.enableValidation();
 addCardValidator.enableValidation();

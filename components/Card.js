@@ -1,7 +1,8 @@
-export class Card {
-  constructor({ name, link }, templateSelector, handleCardClick) {
-    this._name = name;
-    this._link = link;
+export default class Card {
+  constructor(data, templateSelector, handleCardClick) {
+    this._data = data;
+    this._name = data.name;
+    this._link = data.link;
     this._templateSelector = templateSelector;
     // Recibimos como parámetro la función que abrirá el popup de imagen:
     this._handleCardClick = handleCardClick;
@@ -25,7 +26,7 @@ export class Card {
   // Método para eliminar la tarjeta
   _handleDeleteCard() {
     this._element.remove();
-    this._element = null; // buena práctica para prevenir fugas de memoria
+    this._element = null; // prevenir fugas de memoria
   }
 
   // Configura todos los listeners de la tarjeta
@@ -41,7 +42,7 @@ export class Card {
     // Abrir popup de imagen
     this._cardImage.addEventListener("click", () => {
       // Llamar a la función recibida en el constructor (openImagePopup)
-      this._handleCardClick(this._link, this._name, this._name);
+      this._handleCardClick({ link: this._link, name: this._name });
     });
   }
 
