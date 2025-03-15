@@ -1,8 +1,9 @@
 import { Card } from "../components/Card.js";
-import { FormValidator } from "../components/FormValidator.js";
+import FormValidator from "../components/FormValidator.js";
 import { openImagePopup } from "../scripts/utils.js";
 import Section from "../components/Section.js";
-import Popup from "../components/Popup.js";
+import PopupWithImage from "../components/PopupWithImage.js";
+// import Popup from "../components/Popup.js";
 
 // ----------- PRUEBA DE COMPONENTE "Section" -----------
 // Datos de prueba
@@ -25,16 +26,24 @@ sectionInstance.renderItems();
 
 // ----------- PRUEBA DE COMPONENTE "Popup" -----------
 
-const popupInstance = new Popup(".popup_testing");
+// const popupInstance = new Popup(".popup_testing");
 
-popupInstance.setEventListeners();
+// popupInstance.setEventListeners();
 
-popupInstance.open();
+// popupInstance.open();
 
-setTimeout(() => {
-  popupInstance.close();
-}, 10000);
+// setTimeout(() => {
+//   popupInstance.close();
+// }, 10000);
 
+// ----------- PRUEBA DE COMPONENTE "PopupWithImage" ----------
+const popupWithImageInstance = new PopupWithImage(".popup_image-view");
+popupWithImageInstance.setEventListeners();
+
+popupWithImageInstance.open({
+  link: "https://images.unsplash.com/photo-1541336032412-2048a678540d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  name: "Descripción de la imagen",
+});
 // Fin de seccion de pruebas
 
 // Configuración para la validación
