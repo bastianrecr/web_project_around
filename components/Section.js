@@ -5,15 +5,15 @@ export default class Section {
     this._container = document.querySelector(containerSelector);
   }
 
-  // Método para renderizar todos los elementos en la página
+  // Renderiza todos los elementos iniciales
   renderItems() {
     this._items.forEach((item) => {
       this._renderer(item);
     });
   }
 
-  // Método para agregar un solo elemento al contenedor
+  // Agrega un solo elemento al contenedor (usando prepend)
   addItem(element) {
-    this._container.append(element);
+    this._container.prepend(element);
   }
 }
