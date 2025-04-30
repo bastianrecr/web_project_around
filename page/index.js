@@ -4,44 +4,15 @@ import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import UserInfo from "../components/UserInfo.js";
 import Section from "../components/Section.js";
+import Api from "../components/Api.js";
 
-// ----------------- CONFIGURACIÓN DE VALIDACIÓN -----------------
-const validationConfig = {
-  formSelector: ".popup__form",
-  inputSelector: ".popup__input",
-  submitButtonSelector: ".popup__submit-button",
-  inactiveButtonClass: "popup__submit-button_inactive",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "popup__input-error_active",
-};
-
-// ----------------- TARJETAS INICIALES -----------------
-const initialCards = [
-  {
-    name: "Valle de Yosemite",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/yosemite.jpg",
+const api = new Api({
+  baseUrl: "https://around-api.es.tripleten-services.com/v1",
+  headers: {
+    authorization: "a8f4bb4a-2f67-4de9-b1e9-63e3432a77ea",
+    "Content-Type": "application/json",
   },
-  {
-    name: "Lago Louise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/lake-louise.jpg",
-  },
-  {
-    name: "Montañas Calvas",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/bald-mountains.jpg",
-  },
-  {
-    name: "Latemar",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/latemar.jpg",
-  },
-  {
-    name: "Parque Nacional de la Vanoise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/vanoise.jpg",
-  },
-  {
-    name: "Lago di Braies",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/lago.jpg",
-  },
-];
+});
 
 // ----------------- INSTANCIA DE USERINFO -----------------
 // Se encargará de obtener y actualizar la información del perfil.
@@ -54,19 +25,6 @@ const userInfo = new UserInfo({
 const popupWithImage = new PopupWithImage(".popup_image-view");
 popupWithImage.setEventListeners();
 
-// ----------------- INSTANCIA DE LA SECCIÓN (GALERÍA) -----------------
-const cardList = new Section(
-  {
-    items: initialCards,
-    renderer: (cardData) => {
-      const cardElement = createCard(cardData);
-      cardList.addItem(cardElement);
-    },
-  },
-  ".gallery"
-);
-cardList.renderItems();
-
 // ----------------- FUNCIÓN PARA CREAR TARJETAS -----------------
 function createCard(cardData) {
   const card = new Card(
@@ -78,6 +36,48 @@ function createCard(cardData) {
   );
   return card.generateCard();
 }
+
+// ----------------- INSTANCIA DE LA SECCIÓN (GALERÍA) -----------------
+const cardList = new Section(
+  {
+    items: [],
+    renderer: (cardData) => {
+      const cardElement = createCard(cardData);
+      cardList.addItem(cardElement);
+    },
+  },
+  ".gallery"
+);
+// cardList.renderItems();
+
+// ----------------- CARGA DE USUARIO Y TARJETAS SIMULTANEAMENTE -----------------
+
+Promise.all([api.getUserInfo(), api.getInitialCards()])
+  .then(([userData, cards]) => {
+    // Inyectar datos de perfil
+    userInfo.setUserInfo({
+      name: userData.name,
+      about: userData.about,
+    });
+    document.querySelector(".profile__avatar").src = userData.avatar;
+
+    // Renderizar tarjetas recibidas
+    cards.forEach((cardData) => {
+      const cardElement = createCard(cardData);
+      cardList.addItem(cardElement);
+    });
+  })
+  .catch((err) => console.error("Error inicializando app:", err));
+
+// ----------------- CONFIGURACIÓN DE VALIDACIÓN -----------------
+const validationConfig = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__submit-button",
+  inactiveButtonClass: "popup__submit-button_inactive",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__input-error_active",
+};
 
 // ----------------- INSTANCIAS DE VALIDADORES -----------------
 const editProfileFormElement = document.querySelector(
