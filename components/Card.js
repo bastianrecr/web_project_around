@@ -1,6 +1,10 @@
 export default class Card {
-  constructor(data, templateSelector, handleCardClick) {
+  constructor(data, templateSelector, handleCardClick, userId) {
     this._data = data;
+    this._id = data._id;
+    this._ownerId = data.owner;
+    this._isLiked = data.isLiked;
+    this._userId = userId;
     this._name = data.name;
     this._link = data.link;
     this._templateSelector = templateSelector;
@@ -66,6 +70,10 @@ export default class Card {
 
     // Listeners
     this._setEventListeners();
+
+    if (this._ownerId !== this._userId) {
+      this._trashButton.remove();
+    }
 
     return this._element;
   }

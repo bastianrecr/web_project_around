@@ -30,9 +30,8 @@ function createCard(cardData) {
   const card = new Card(
     cardData,
     "#gallery-card-template",
-    ({ link, name }) => {
-      popupWithImage.open({ link, name });
-    }
+    ({ link, name }) => popupWithImage.open({ link, name }),
+    myUserId
   );
   return card.generateCard();
 }
@@ -52,9 +51,12 @@ const cardList = new Section(
 
 // ----------------- CARGA DE USUARIO Y TARJETAS SIMULTANEAMENTE -----------------
 
+let myUserId = null;
+
 Promise.all([api.getUserInfo(), api.getInitialCards()])
   .then(([userData, cards]) => {
     // Inyectar datos de perfil
+    myUserId = userData._id;
     userInfo.setUserInfo({
       name: userData.name,
       about: userData.about,
