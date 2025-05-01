@@ -31,7 +31,8 @@ function createCard(cardData) {
     cardData,
     "#gallery-card-template",
     ({ link, name }) => popupWithImage.open({ link, name }),
-    myUserId
+    myUserId,
+    api
   );
   return card.generateCard();
 }
