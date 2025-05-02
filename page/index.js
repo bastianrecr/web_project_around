@@ -7,7 +7,7 @@ import UserInfo from "../components/UserInfo.js";
 import Section from "../components/Section.js";
 import Api from "../components/Api.js";
 
-// ----------------- 1) CONFIGURACIÓN DEL VALIDADOR -----------------
+// ----------------- CONFIGURACIÓN DEL VALIDADOR -----------------
 const validationConfig = {
   formSelector: ".popup__form",
   inputSelector: ".popup__input",
@@ -17,7 +17,7 @@ const validationConfig = {
   errorClass: "popup__input-error_active",
 };
 
-// ----------------- 2) INSTANCIA DE API Y USERINFO -----------------
+// ----------------- INSTANCIA DE API Y USERINFO -----------------
 const api = new Api({
   baseUrl: "https://around-api.es.tripleten-services.com/v1",
   headers: {
@@ -30,7 +30,7 @@ const userInfo = new UserInfo({
   aboutSelector: ".profile__about",
 });
 
-// ----------------- 3) POPUP CAMBIAR AVATAR -----------------
+// ----------------- POPUP CAMBIAR AVATAR -----------------
 const avatarFormElement = document.querySelector(".popup__form_update-avatar");
 const avatarValidator = new FormValidator(validationConfig, avatarFormElement);
 avatarValidator.enableValidation();
@@ -60,15 +60,15 @@ document.querySelector(".profile__avatar").addEventListener("click", () => {
   avatarPopup.open();
 });
 
-// ----------------- 4) POPUP CONFIRMAR ELIMINACIÓN -----------------
+// ----------------- POPUP CONFIRMAR ELIMINACIÓN -----------------
 const confirmDeletePopup = new PopupWithConfirmation(".popup_confirm-delete");
 confirmDeletePopup.setEventListeners();
 
-// ----------------- 5) POPUP VER IMAGEN -----------------
+// ----------------- POPUP VER IMAGEN -----------------
 const popupWithImage = new PopupWithImage(".popup_image-view");
 popupWithImage.setEventListeners();
 
-// ----------------- 6) POPUP EDITAR PERFIL -----------------
+// ----------------- POPUP EDITAR PERFIL -----------------
 const editFormElement = document.querySelector(".popup__form_edit-profile");
 const editValidator = new FormValidator(validationConfig, editFormElement);
 editValidator.enableValidation();
@@ -103,7 +103,7 @@ document
     profilePopup.open();
   });
 
-// ----------------- 7) POPUP AGREGAR TARJETA -----------------
+// ----------------- POPUP AGREGAR TARJETA -----------------
 const addFormElement = document.querySelector(".popup__form_add-card");
 const addValidator = new FormValidator(validationConfig, addFormElement);
 addValidator.enableValidation();
@@ -136,7 +136,7 @@ document.querySelector(".profile__add-button").addEventListener("click", () => {
   cardPopup.open();
 });
 
-// ----------------- 8) GALERÍA Y CARGA INICIAL -----------------
+// ----------------- GALERÍA Y CARGA INICIAL -----------------
 function createCard(cardData) {
   const card = new Card(
     cardData,
