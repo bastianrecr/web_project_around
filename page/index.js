@@ -2,6 +2,7 @@ import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
+import PopupWithConfirmation from "../components/PopupWithConfirmation.js";
 import UserInfo from "../components/UserInfo.js";
 import Section from "../components/Section.js";
 import Api from "../components/Api.js";
@@ -9,7 +10,7 @@ import Api from "../components/Api.js";
 const api = new Api({
   baseUrl: "https://around-api.es.tripleten-services.com/v1",
   headers: {
-    authorization: "a8f4bb4a-2f67-4de9-b1e9-63e3432a77ea",
+    authorization: "4bd7ffbf-9468-4afa-8db8-1e63eb66eec9",
     "Content-Type": "application/json",
   },
 });
@@ -20,6 +21,10 @@ const userInfo = new UserInfo({
   nameSelector: ".profile__name",
   aboutSelector: ".profile__about",
 });
+// ----------------- INSTANCIA DE POPUPWITHCONFIRMATION -----------------
+
+const confirmDeletePopup = new PopupWithConfirmation(".popup_confirm-delete");
+confirmDeletePopup.setEventListeners();
 
 // ----------------- INSTANCIA DEL POPUP DE IMAGEN -----------------
 const popupWithImage = new PopupWithImage(".popup_image-view");
@@ -32,7 +37,8 @@ function createCard(cardData) {
     "#gallery-card-template",
     ({ link, name }) => popupWithImage.open({ link, name }),
     myUserId,
-    api
+    api,
+    confirmDeletePopup
   );
   return card.generateCard();
 }

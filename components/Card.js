@@ -1,5 +1,12 @@
 export default class Card {
-  constructor(data, templateSelector, handleCardClick, userId, api) {
+  constructor(
+    data,
+    templateSelector,
+    handleCardClick,
+    userId,
+    api,
+    confirmPopup
+  ) {
     this._data = data;
     this._id = data._id;
     this._ownerId = data.owner;
@@ -10,6 +17,7 @@ export default class Card {
     this._link = data.link;
     this._templateSelector = templateSelector;
     this._handleCardClick = handleCardClick;
+    this._confirmPopup = confirmPopup;
   }
 
   _getTemplate() {
@@ -50,7 +58,11 @@ export default class Card {
 
   _setEventListeners() {
     this._likeButton.addEventListener("click", () => this._toggleLike());
-    this._trashButton.addEventListener("click", () => this._handleDeleteCard());
+    this._trashButton.addEventListener("click", () => {
+      this._confirmPopup.open(() => {
+        this._handleDeleteCard();
+      });
+    });
     this._cardImage.addEventListener("click", () =>
       this._handleCardClick({ link: this._link, name: this._name })
     );
