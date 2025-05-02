@@ -7,30 +7,136 @@ import UserInfo from "../components/UserInfo.js";
 import Section from "../components/Section.js";
 import Api from "../components/Api.js";
 
+// ----------------- 1) CONFIGURACIÓN DEL VALIDADOR -----------------
+const validationConfig = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__submit-button",
+  inactiveButtonClass: "popup__submit-button_inactive",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__input-error_active",
+};
+
+// ----------------- 2) INSTANCIA DE API Y USERINFO -----------------
 const api = new Api({
   baseUrl: "https://around-api.es.tripleten-services.com/v1",
   headers: {
-    authorization: "4bd7ffbf-9468-4afa-8db8-1e63eb66eec9",
+    authorization: "fdc1d5c3-979e-4072-8b0b-9337349b0bbe",
     "Content-Type": "application/json",
   },
 });
-
-// ----------------- INSTANCIA DE USERINFO -----------------
-// Se encargará de obtener y actualizar la información del perfil.
 const userInfo = new UserInfo({
   nameSelector: ".profile__name",
   aboutSelector: ".profile__about",
 });
-// ----------------- INSTANCIA DE POPUPWITHCONFIRMATION -----------------
 
+// ----------------- 3) POPUP CAMBIAR AVATAR -----------------
+const avatarFormElement = document.querySelector(".popup__form_update-avatar");
+const avatarValidator = new FormValidator(validationConfig, avatarFormElement);
+avatarValidator.enableValidation();
+
+const avatarPopup = new PopupWithForm({
+  popupSelector: ".popup_update-avatar",
+  handleFormSubmit: (inputValues) => {
+    const saveBtn = avatarFormElement.querySelector(".popup__submit-button");
+    saveBtn.textContent = "Guardando...";
+    api
+      .updateAvatar({ avatar: inputValues["avatar-link"] })
+      .then((userData) => {
+        document.querySelector(".profile__avatar").src = userData.avatar;
+        avatarPopup.close();
+      })
+      .catch((err) => console.error("Error al actualizar avatar:", err))
+      .finally(() => {
+        saveBtn.textContent = "Guardar";
+      });
+  },
+  formValidator: avatarValidator,
+});
+avatarPopup.setEventListeners();
+
+document.querySelector(".profile__avatar").addEventListener("click", () => {
+  avatarValidator.resetValidation();
+  avatarPopup.open();
+});
+
+// ----------------- 4) POPUP CONFIRMAR ELIMINACIÓN -----------------
 const confirmDeletePopup = new PopupWithConfirmation(".popup_confirm-delete");
 confirmDeletePopup.setEventListeners();
 
-// ----------------- INSTANCIA DEL POPUP DE IMAGEN -----------------
+// ----------------- 5) POPUP VER IMAGEN -----------------
 const popupWithImage = new PopupWithImage(".popup_image-view");
 popupWithImage.setEventListeners();
 
-// ----------------- FUNCIÓN PARA CREAR TARJETAS -----------------
+// ----------------- 6) POPUP EDITAR PERFIL -----------------
+const editFormElement = document.querySelector(".popup__form_edit-profile");
+const editValidator = new FormValidator(validationConfig, editFormElement);
+editValidator.enableValidation();
+
+const profilePopup = new PopupWithForm({
+  popupSelector: ".popup_edit-profile",
+  handleFormSubmit: (inputValues) => {
+    const saveBtn = editFormElement.querySelector(".popup__submit-button");
+    saveBtn.textContent = "Guardando...";
+    api
+      .editProfile({ name: inputValues.name, about: inputValues.about })
+      .then((userData) => {
+        userInfo.setUserInfo(userData);
+        profilePopup.close();
+      })
+      .catch((err) => console.error("Error al editar perfil:", err))
+      .finally(() => {
+        saveBtn.textContent = "Guardar";
+      });
+  },
+  formValidator: editValidator,
+});
+profilePopup.setEventListeners();
+
+document
+  .querySelector(".profile__edit-button")
+  .addEventListener("click", () => {
+    const current = userInfo.getUserInfo();
+    editFormElement.elements.name.value = current.name;
+    editFormElement.elements.about.value = current.about;
+    editValidator.resetValidation();
+    profilePopup.open();
+  });
+
+// ----------------- 7) POPUP AGREGAR TARJETA -----------------
+const addFormElement = document.querySelector(".popup__form_add-card");
+const addValidator = new FormValidator(validationConfig, addFormElement);
+addValidator.enableValidation();
+
+const cardPopup = new PopupWithForm({
+  popupSelector: ".popup_add-card",
+  handleFormSubmit: (inputValues) => {
+    const saveBtn = addFormElement.querySelector(".popup__submit-button");
+    saveBtn.textContent = "Guardando...";
+    api
+      .addCard({
+        name: inputValues["card-title"],
+        link: inputValues["card-link"],
+      })
+      .then((newCard) => {
+        cardList.addItem(createCard(newCard));
+        cardPopup.close();
+      })
+      .catch((err) => console.error("Error al crear tarjeta:", err))
+      .finally(() => {
+        saveBtn.textContent = "Crear";
+      });
+  },
+  formValidator: addValidator,
+});
+cardPopup.setEventListeners();
+
+document.querySelector(".profile__add-button").addEventListener("click", () => {
+  addValidator.resetValidation();
+  cardPopup.open();
+});
+
+// ----------------- 8) GALERÍA Y CARGA INICIAL -----------------
 function createCard(cardData) {
   const card = new Card(
     cardData,
@@ -43,105 +149,20 @@ function createCard(cardData) {
   return card.generateCard();
 }
 
-// ----------------- INSTANCIA DE LA SECCIÓN (GALERÍA) -----------------
 const cardList = new Section(
   {
     items: [],
-    renderer: (cardData) => {
-      const cardElement = createCard(cardData);
-      cardList.addItem(cardElement);
-    },
+    renderer: (item) => cardList.addItem(createCard(item)),
   },
   ".gallery"
 );
-// cardList.renderItems();
-
-// ----------------- CARGA DE USUARIO Y TARJETAS SIMULTANEAMENTE -----------------
 
 let myUserId = null;
-
 Promise.all([api.getUserInfo(), api.getInitialCards()])
   .then(([userData, cards]) => {
-    // Inyectar datos de perfil
     myUserId = userData._id;
-    userInfo.setUserInfo({
-      name: userData.name,
-      about: userData.about,
-    });
+    userInfo.setUserInfo(userData);
     document.querySelector(".profile__avatar").src = userData.avatar;
-
-    // Renderizar tarjetas recibidas
-    cards.forEach((cardData) => {
-      const cardElement = createCard(cardData);
-      cardList.addItem(cardElement);
-    });
+    cards.forEach((cardData) => cardList.addItem(createCard(cardData)));
   })
   .catch((err) => console.error("Error inicializando app:", err));
-
-// ----------------- CONFIGURACIÓN DE VALIDACIÓN -----------------
-const validationConfig = {
-  formSelector: ".popup__form",
-  inputSelector: ".popup__input",
-  submitButtonSelector: ".popup__submit-button",
-  inactiveButtonClass: "popup__submit-button_inactive",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "popup__input-error_active",
-};
-
-// ----------------- INSTANCIAS DE VALIDADORES -----------------
-const editProfileFormElement = document.querySelector(
-  ".popup__form_edit-profile"
-);
-const addCardFormElement = document.querySelector(".popup__form_add-card");
-
-const editProfileValidator = new FormValidator(
-  validationConfig,
-  editProfileFormElement
-);
-const addCardValidator = new FormValidator(
-  validationConfig,
-  addCardFormElement
-);
-
-editProfileValidator.enableValidation();
-addCardValidator.enableValidation();
-
-// ----------------- POPUP CON FORMULARIO: EDITAR PERFIL -----------------
-const profilePopup = new PopupWithForm({
-  popupSelector: ".popup_edit-profile",
-  handleFormSubmit: (inputValues) => {
-    userInfo.setUserInfo({ name: inputValues.name, about: inputValues.about });
-  },
-  formValidator: editProfileValidator,
-});
-profilePopup.setEventListeners();
-
-// ----------------- POPUP CON FORMULARIO: AGREGAR TARJETA -----------------
-const cardPopup = new PopupWithForm({
-  popupSelector: ".popup_add-card",
-  handleFormSubmit: (inputValues) => {
-    const cardData = {
-      name: inputValues["card-title"],
-      link: inputValues["card-link"],
-    };
-    const cardElement = createCard(cardData);
-    cardList.addItem(cardElement);
-  },
-  formValidator: addCardValidator,
-});
-cardPopup.setEventListeners();
-
-// ----------------- EVENTOS DE LOS BOTONES -----------------
-const editButton = document.querySelector(".profile__edit-button");
-editButton.addEventListener("click", () => {
-  // Obtiene la información actual del usuario y la inyecta en el formulario
-  const currentUser = userInfo.getUserInfo();
-  editProfileFormElement.elements.name.value = currentUser.name;
-  editProfileFormElement.elements.about.value = currentUser.about;
-  profilePopup.open();
-});
-
-const addButton = document.querySelector(".profile__add-button");
-addButton.addEventListener("click", () => {
-  cardPopup.open();
-});

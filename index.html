@@ -28,11 +28,13 @@
       <main class="content">
         <section class="profile">
           <div class="profile__information">
-            <img
-              src="./images/profile/avatar.png"
-              alt="Foto de perfil del usuario"
-              class="profile__avatar"
-            />
+            <div class="profile__avatar-container">
+              <img
+                src="./images/profile/avatar.png"
+                alt="Foto de perfil del usuario"
+                class="profile__avatar"
+              />
+            </div>
 
             <div class="profile__bio">
               <div class="profile__name-text-container">
@@ -139,6 +141,26 @@
         <h2 class="popup__title">¿Estás seguro?</h2>
         <form class="popup__form popup__form_confirm-delete">
           <button type="submit" class="popup__submit-button">Sí</button>
+        </form>
+      </div>
+    </div>
+    <div class="popup popup_update-avatar">
+      <div class="popup__overlay"></div>
+      <div class="popup__content">
+        <button class="popup__close-button"></button>
+        <h2 class="popup__title">Cambiar foto de perfil</h2>
+        <form class="popup__form popup__form_update-avatar">
+          <label class="popup__input-field">
+            <input
+              id="avatar-link"
+              class="popup__input"
+              type="url"
+              placeholder="Enlace de la imagen"
+              required
+            />
+            <span class="popup__input-error popup__avatar-link-error"></span>
+          </label>
+          <button type="submit" class="popup__submit-button">Guardar</button>
         </form>
       </div>
     </div>
