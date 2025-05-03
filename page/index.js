@@ -158,11 +158,21 @@ const cardList = new Section(
 );
 
 let myUserId = null;
+
 Promise.all([api.getUserInfo(), api.getInitialCards()])
   .then(([userData, cards]) => {
     myUserId = userData._id;
     userInfo.setUserInfo(userData);
     document.querySelector(".profile__avatar").src = userData.avatar;
-    cards.forEach((cardData) => cardList.addItem(createCard(cardData)));
+
+    const sortedCards = cards.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
+    const galleryEl = document.querySelector(".gallery");
+    sortedCards.forEach((cardData) => {
+      const cardEl = createCard(cardData);
+      galleryEl.append(cardEl);
+    });
   })
   .catch((err) => console.error("Error inicializando app:", err));
